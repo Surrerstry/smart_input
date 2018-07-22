@@ -7,6 +7,7 @@ if version_info.major == 3:
 	
 	# shortening
 	smart_input = __Python_3_functions__.smart_input
+	menu = __Python_3_functions__.menu
 
 elif version_info.major == 2:
 
@@ -16,6 +17,7 @@ elif version_info.major == 2:
 	# shortening
 	smart_input = __Python_2_functions__.smart_input
 	raw_smart_input = __Python_2_functions__.raw_smart_input
+	menu = __Python_2_functions__.menu
 
 else:
 	stderr("Error: Unknown version of Python...")

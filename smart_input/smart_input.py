@@ -1,13 +1,13 @@
 from re import search
 
-__version__ = 0.1
+__version__ = 0.3
 __author__ = 'Surrerstry'
 
 
 class __Python_2_functions__(object):
 
 	@staticmethod
-	def smart_input(message='', repeat_until_success=None, regex=None, tries=0, type_restriction=None, action_when_success=None, action_when_fail=None, action_on_the_end=None, conditioning_call=None):
+	def smart_input(message='', repeat_until_success=None, regex=None, tries=None, type_restriction=None, action_when_success=None, action_when_fail=None, action_on_the_end=None, conditioning_call=None):
 		"""
 		Import:
 		from smart_input import smart_input
@@ -47,6 +47,9 @@ class __Python_2_functions__(object):
 		# It will be asking forver until input is correct
 		smart_input('', repeat_until_success=True, type_restriction=int)
 
+		# You can achieve the same what repeat_until_success=True by trick:
+		smart_input('', tries=0, type_restriction=int)
+
 		# It this way we can use regex as condition
 		smart_input('', repeat_until_success=True, regex=r"\d")
 
@@ -69,13 +72,19 @@ class __Python_2_functions__(object):
 		
 		"""
 
-		if message == '' and repeat_until_success == None and regex == None and tries == 0 and type_restriction == None and action_when_success == None and action_when_fail == None and action_on_the_end == None:
+		if message == '' and repeat_until_success == None and regex == None and tries == None and type_restriction == None and action_when_success == None and action_when_fail == None and action_on_the_end == None:
 			return input()
+
+		if tries == 0:
+			repeat_until_success = True
+
+		if isinstance(tries, type(None)):
+			tries = 0
 
 		if tries != 0 and regex == None and type_restriction == None:
 			raise ValueError("Parameter: 'tries' have to be connected with 'type_restriction' or 'regex'")
 
-		if repeat_until_success != None and tries != 0:
+		if repeat_until_success != None and tries != 0 and tries != None:
 			raise ValueError("You cannot use 'repeat_until_success' and 'tries' together.")
 
 		if repeat_until_success == True and regex == None and type_restriction == None and conditioning_call == None:
@@ -301,7 +310,7 @@ class __Python_2_functions__(object):
 
 
 	@staticmethod
-	def raw_smart_input(message='', repeat_until_success=None, regex=None, tries=0, type_restriction=None, return_converted=None, action_when_success=None, action_when_fail=None, action_on_the_end=None, conditioning_call=None):
+	def raw_smart_input(message='', repeat_until_success=None, regex=None, tries=None, type_restriction=None, return_converted=None, action_when_success=None, action_when_fail=None, action_on_the_end=None, conditioning_call=None):
 		"""
 		Import:
 		from smart_input import raw_smart_input
@@ -345,6 +354,9 @@ class __Python_2_functions__(object):
 		# It will be asking forver until input is correct
 		raw_smart_input('', repeat_until_success=True, type_restriction=int)
 
+		# You can achieve the same what repeat_until_success=True by trick:
+		raw_smart_input('', tries=0, type_restriction=int)
+
 		# It this way we can use regex as condition
 		raw_smart_input('', repeat_until_success=True, regex=r"\d")
 
@@ -366,13 +378,19 @@ class __Python_2_functions__(object):
 		
 		"""
 
-		if message == '' and repeat_until_success == None and regex == None and tries == 0 and type_restriction == None and return_converted == None and action_when_success == None and action_when_fail == None and action_on_the_end == None:
+		if message == '' and repeat_until_success == None and regex == None and tries == None and type_restriction == None and return_converted == None and action_when_success == None and action_when_fail == None and action_on_the_end == None:
 			return raw_input()
+
+		if tries == 0:
+			repeat_until_success = True
+
+		if isinstance(tries, type(None)):
+			tries = 0
 
 		if tries != 0 and regex == None and type_restriction == None:
 			raise ValueError("Parameter: 'tries' have to be connected with 'type_restriction' or 'regex'")
 
-		if repeat_until_success != None and tries != 0:
+		if repeat_until_success != None and tries != 0 and tries != None:
 			raise ValueError("You cannot use 'repeat_until_success' and 'tries' together.")
 
 		if repeat_until_success == True and regex == None and type_restriction == None and conditioning_call == None:
@@ -599,10 +617,68 @@ class __Python_2_functions__(object):
 			raise TypeError('conditioning_call has to be callable')
 
 
+	@staticmethod
+	def menu(menu_collection):
+		menu_obj = __Python_2_functions__.menu_class(menu_collection)
+
+		return menu_obj.menu
+
+	class menu_class(object):
+		
+		def __init__(self, menu_collection):
+			self.menu_collection = menu_collection
+
+			self.menu_collection_joined_dicts = dict()
+
+			for element in self.menu_collection:
+				self.menu_collection_joined_dicts.update(element)
+	
+		def menu(self, choice=None):
+			"""
+			This method allows you to define pretty and simple menu.
+	
+			Parameter:
+			List of dict
+
+			Example of usage together with smart_input:
+
+			from smart_input import raw_smart_input, menu # analogical for smart_input
+			from sys import stdout
+
+			menu_structure = [
+				{1:('1. Menu description', lambda: stdout.write('A\n'))},
+				{2:('2. Menu description', lambda: stdout.write('B\n'))},
+				{3:('3. Menu description', lambda: stdout.write('C\n'))}
+				]
+	
+			my_menu = menu(menu_structure)
+
+			# print out menu only
+			my_menu()
+
+			# take action based on user input (without printing menu)
+			my_menu( raw_smart_input('', repeat_until_success=True, type_restriction=int, return_converted=True) )
+	
+			"""
+
+			if choice == None:
+				if self.menu_collection != None:
+					print
+					for line in self.menu_collection:
+						for key in line:
+							print '   ', line[key][0]
+					print
+			else:
+				try:
+					self.menu_collection_joined_dicts[choice][1]()
+				except Exception as err:
+					raise ValueError('No key {} in menu!'.format(err))
+
+
 class __Python_3_functions__(object):
 
 	@staticmethod
-	def smart_input(message='', repeat_until_success=None, regex=None, tries=0, type_restriction=None, return_converted=None, action_when_success=None, action_when_fail=None, action_on_the_end=None, conditioning_call=None):
+	def smart_input(message='', repeat_until_success=None, regex=None, tries=None, type_restriction=None, return_converted=None, action_when_success=None, action_when_fail=None, action_on_the_end=None, conditioning_call=None):
 		"""
 		Import:
 		from smart_input import smart_input
@@ -646,6 +722,9 @@ class __Python_3_functions__(object):
 		# It will be asking forver until input is correct
 		smart_input('', repeat_until_success=True, type_restriction=int)
 
+		# You can achieve the same what repeat_until_success=True by trick:
+		smart_input('', tries=0, type_restriction=int)
+
 		# It this way we can use regex as condition
 		smart_input('', repeat_until_success=True, regex=r"\d")
 
@@ -667,13 +746,19 @@ class __Python_3_functions__(object):
 		
 		"""
 
-		if message == '' and repeat_until_success == None and regex == None and tries == 0 and type_restriction == None and return_converted == None and action_when_success == None and action_when_fail == None and action_on_the_end == None:
+		if message == '' and repeat_until_success == None and regex == None and tries == None and type_restriction == None and return_converted == None and action_when_success == None and action_when_fail == None and action_on_the_end == None:
 			return input()
+
+		if tries == 0:
+			repeat_until_success = True
+
+		if isinstance(tries, type(None)):
+			tries = 0
 
 		if tries != 0 and regex == None and type_restriction == None:
 			raise ValueError("Parameter: 'tries' have to be connected with 'type_restriction' or 'regex'")
 
-		if repeat_until_success != None and tries != 0:
+		if repeat_until_success != None and tries != 0 and tries != None:
 			raise ValueError("You cannot use 'repeat_until_success' and 'tries' together.")
 
 		if repeat_until_success == True and regex == None and type_restriction == None and conditioning_call == None:
@@ -898,3 +983,62 @@ class __Python_3_functions__(object):
 
 		if conditioning_call != None and not callable(conditioning_call):
 			raise TypeError('conditioning_call has to be callable')
+
+	@staticmethod
+	def menu(menu_collection):
+		menu_obj = __Python_3_functions__.menu_class(menu_collection)
+
+		return menu_obj.menu
+
+	class menu_class(object):
+		
+		def __init__(self, menu_collection):
+			self.menu_collection = menu_collection
+
+			self.menu_collection_joined_dicts = dict()
+
+			for element in self.menu_collection:
+				self.menu_collection_joined_dicts.update(element)
+	
+		def menu(self, choice=None):
+			"""
+			This method allows you to define pretty and simple menu.
+	
+			Parameter:
+			List of dict
+
+			Example of usage together with smart_input:
+
+			from smart_input import smart_input, menu
+
+			menu_structure = [
+				{1:('1. Menu description', lambda: print('A'))},
+				{2:('2. Menu description', lambda: print('B'))},
+				{3:('3. Menu description', lambda: print('C'))}
+				]
+	
+			my_menu = menu(menu_structure)
+
+			# print out menu only
+			my_menu()
+
+			# take action based on user input (without printing menu)
+			my_menu( smart_input('', repeat_until_success=True, type_restriction=int, return_converted=True) )
+	
+			"""
+
+			if choice == None:
+				if self.menu_collection != None:
+					print()
+					for line in self.menu_collection:
+						for key in line:
+							print('   ', line[key][0])
+					print()
+			else:
+				try:
+					self.menu_collection_joined_dicts[choice][1]()
+				except Exception as err:
+					raise ValueError('No key {} in menu!'.format(err))
+
+
+
