@@ -666,7 +666,7 @@ class __Python_2_functions__(object):
 					print
 					for line in self.menu_collection:
 						for key in line:
-							print '   ', line[key][0]
+							print('   '.format(line[key][0]))
 					print
 			else:
 				try:
