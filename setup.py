@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
 	name = 'smart_input',
 	packages = ['smart_input'],
-	version = '0.31',
+	version = '0.32',
 	description = "Library to filtering out user input.",
 	author = 'Damian Medrala',
 	author_email = 'surrerstry@gmail.com',
