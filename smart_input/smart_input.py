@@ -1,6 +1,6 @@
 from re import search
 
-__version__ = 0.3
+__version__ = 0.32
 __author__ = 'Surrerstry'
 
 
@@ -666,7 +666,7 @@ class __Python_2_functions__(object):
 					print
 					for line in self.menu_collection:
 						for key in line:
-							print('   '.format(line[key][0]))
+							print('   {}'.format(line[key][0]))
 					print
 			else:
 				try:
